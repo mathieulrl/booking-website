@@ -1,46 +1,8 @@
-type ConciergeLink = {
-  href: string;
-  emoji: string;
-  title: string;
-  detail: string;
-  highlight?: boolean;
-};
-
-const LINKS: ConciergeLink[] = [
-  {
-    href: "https://www.gov.uk/eta/apply",
-    emoji: "🛂",
-    title: "Autorisation de voyage (ETA)",
-    detail: "Obligatoire pour les ressortissants de l'UE avant de venir. À faire en premier.",
-    highlight: true,
-  },
-  {
-    href: "https://www.eurostar.com",
-    emoji: "🚄",
-    title: "Eurostar",
-    detail: "Paris, Lille ou Bruxelles → London St Pancras.",
-  },
-  {
-    href: "https://www.google.com/travel/flights?q=vols%20vers%20Londres",
-    emoji: "✈️",
-    title: "Vols vers Londres",
-    detail: "Comparez les billets d'avion.",
-  },
-  {
-    href: "https://tfl.gov.uk/maps_/tfl-go?intcmp=63185",
-    emoji: "🚇",
-    title: "Se déplacer à Londres — TfL Go",
-    detail: "Itinéraires en transports (paiement sans contact accepté).",
-  },
-];
-
-const LUGGAGE_PROVIDERS = [
-  { href: "https://www.stasher.com/", label: "Stasher" },
-  { href: "https://usebounce.com/fr/luggage-storage/london", label: "Bounce" },
-];
-
-const LUGGAGE_DETAIL =
-  "Déposez vos valises en ville avant votre train ou en arrivant.";
+import {
+  CONCIERGE_LINKS,
+  LUGGAGE_DETAIL,
+  LUGGAGE_PROVIDERS,
+} from "@/lib/concierge";
 
 export default function ConciergeCard() {
   return (
@@ -49,7 +11,7 @@ export default function ConciergeCard() {
       <p className="mt-1 text-sm text-stone-500">Tout pour préparer votre venue.</p>
 
       <ul className="mt-4 space-y-2">
-        {LINKS.map((link) => (
+        {CONCIERGE_LINKS.map((link) => (
           <li key={link.href}>
             <a
               href={link.href}

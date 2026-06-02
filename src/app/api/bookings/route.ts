@@ -4,6 +4,7 @@ import { isAuthed } from "@/lib/auth";
 import { getMongo } from "@/lib/mongodb";
 import { datesBetween, todayKey } from "@/lib/date";
 import { isRateLimited } from "@/lib/rateLimit";
+import { sendBookingEmails } from "@/lib/email";
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_DAYS = 60;
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
   const endDate = body.endDate.trim();
   const name = body.name.trim();
   const message = typeof body.message === "string" ? body.message.trim() : "";
+  const email = typeof body.email === "string" ? body.email.trim() : "";
 
   if (!DATE_PATTERN.test(startDate) || !DATE_PATTERN.test(endDate)) {
     return NextResponse.json({ error: "Date invalide" }, { status: 400 });
@@ -108,6 +110,12 @@ export async function POST(req: NextRequest) {
     throw error;
   } finally {
     await session.endSession();
+  }
+
+  try {
+    await sendBookingEmails({ name, email, message, start: startDate, end: endDate });
+  } catch (error) {
+    console.error("Failed to send booking emails:", error);
   }
 
   return NextResponse.json({ ok: true }, { status: 201 });

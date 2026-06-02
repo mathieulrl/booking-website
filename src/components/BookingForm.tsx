@@ -16,6 +16,7 @@ export default function BookingForm({
   onChange: () => Promise<void> | void;
 }) {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -35,7 +36,7 @@ export default function BookingForm({
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ startDate: start, endDate: end, name, message }),
+        body: JSON.stringify({ startDate: start, endDate: end, name, email, message }),
       });
       if (res.ok) {
         await onChange();
@@ -122,6 +123,14 @@ export default function BookingForm({
               placeholder="Votre nom"
               autoFocus
               maxLength={60}
+              className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-200"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Votre email (pour recevoir une confirmation)"
+              maxLength={120}
               className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-200"
             />
             <textarea

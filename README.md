@@ -34,6 +34,8 @@ comments and docs are in English.
    - `ADMIN_CODE`: your private code. Logging in with it unlocks cancellation.
    - `SESSION_SECRET`: random secret signing the session cookie
      (`openssl rand -hex 32`).
+   - `RESEND_API_KEY`, `ADMIN_EMAIL`, `EMAIL_FROM` (optional): enable booking
+     emails (see "Emails" below). Without `RESEND_API_KEY`, no email is sent.
 
 3. Start the dev server:
 
@@ -70,6 +72,23 @@ comments and docs are in English.
 - Only an admin (logged in with `ADMIN_CODE`) can cancel. Cancelling any day of
   a stay cancels the whole stay.
 - Past dates and already-booked days cannot be booked.
+
+## Emails
+
+On each booking, two emails are attempted via [Resend](https://resend.com)
+(called over its HTTP API, no extra dependency):
+
+- a **confirmation** to the guest (if they entered an email),
+- a **notification** to `ADMIN_EMAIL`.
+
+Sending is **best-effort**: if it fails (or `RESEND_API_KEY` is unset), the
+booking still succeeds and the error is logged server-side. The guest's email is
+**not stored** in the database — it is only used to send the confirmation.
+
+⚠️ **Test mode (no verified domain):** Resend only delivers to the email address
+of your own Resend account. So the admin notification works (set `ADMIN_EMAIL` to
+that address), but guest confirmations will not be delivered until you verify a
+domain in Resend and set `EMAIL_FROM` to an address on that domain.
 
 ## Structure
 
